@@ -1,31 +1,25 @@
 from flask import Flask
 from flask_restful import Api, Resource
 
+from details_soup import UserData, UsernameError, PlatformError
+
 app = Flask(__name__)
 api = Api(app)
 
 
 class Details(Resource):
-    def _interview_bit(self, username, platform):
-        data = {'username': username, 'platform': platform.title()}
-
-        url = 'https://www.interviewbit.com/profile/{}'.format(username)
-
-
-
-
     def get(self, platform, username):
 
-        if platform == 'interviewbit':
+        user_data = UserData(username)
 
+        try:
+            return user_data.get_details(platform)
 
+        except UsernameError:
+            return {'status': 'Failed', 'details': 'Invalid username'}
 
-            return {
-                'username': username,
-                'platform': platform
-            }
-
-        return '<h1>404 NOT FOUND<\h1>'
+        except PlatformError:
+            return {'stats': 'Failed', 'details': 'Invalid Platform'}
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
