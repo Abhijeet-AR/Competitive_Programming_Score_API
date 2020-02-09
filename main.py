@@ -25,4 +25,4 @@ class Details(Resource):
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
