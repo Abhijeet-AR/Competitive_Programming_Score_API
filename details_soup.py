@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-import requests, json
+import requests
 
 
 class UsernameError(Exception):
@@ -59,8 +59,8 @@ class UserData:
 
             return [long_challenge, cook_off, lunch_time]
 
-        details = {'rank': rank, 'rating': rating, 'global rank': global_rank, 'country rank': country_rank,
-                   'contests': contests_details_get()}
+        details = {'status': 'Success','rank': rank, 'rating': rating, 'global rank': global_rank,
+                   'country rank': country_rank, 'contests': contests_details_get()}
 
         '''Can add latest contests details'''
 
