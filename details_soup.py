@@ -81,9 +81,20 @@ class UserData:
 
         details_api = details_api['result'][0]
 
+        try:
+            rating = details_api['rating']
+            max_rating = details_api['maxRating']
+            rank = details_api['rank']
+            max_rank = details_api['maxRank']
+
+        except KeyError:
+            rating = 'Unrated'
+            max_rating = 'Unrated'
+            rank = 'Unrated'
+            max_rank = 'Unrated'
+
         details = {'status': 'Success', 'username': self.__username, 'platform': 'Codeforces',
-                   'rating': details_api['rating'], 'max rating': details_api['maxRating'],
-                   'rank': details_api['rank'], 'max rank': details_api['maxRank']}
+                   'rating': rating, 'max rating': max_rating, 'rank': rank, 'max rank': max_rank}
 
         return details
 
@@ -172,8 +183,8 @@ class UserData:
 
 
 if __name__ == '__main__':
-    ud = UserData('abhijeet_ar')
+    ud = UserData('ainesh02')
 
-    ans = ud.get_details('spoj')
+    ans = ud.get_details('codeforces')
 
     print(ans)
