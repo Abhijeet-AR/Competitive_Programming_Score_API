@@ -85,7 +85,7 @@ class UserData:
 
                 for prob in category.find_all('a'):
                     fully_solved[category_name].append({'name': prob.text,
-                                                        'link': 'https://www.codechef.com/' + prob['href']})
+                                                        'link': 'https://www.codechef.com' + prob['href']})
 
             partially_solved = {'count': re.findall('\d+', no_solved[1].text)[0]}
             for category in categories[1].find_all('p'):
@@ -94,7 +94,7 @@ class UserData:
 
                 for prob in category.find_all('a'):
                     partially_solved[category_name].append({'name': prob.text,
-                                                            'link': 'https://www.codechef.com/' + prob['href']})
+                                                            'link': 'https://www.codechef.com' + prob['href']})
 
             return fully_solved, partially_solved
 
