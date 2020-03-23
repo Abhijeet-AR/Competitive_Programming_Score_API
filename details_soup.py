@@ -1,6 +1,7 @@
+import json
+import re
+import requests
 from bs4 import BeautifulSoup
-
-import requests, json
 
 
 class UsernameError(Exception):
@@ -70,9 +71,37 @@ class UserData:
 
             return all_rating
 
+        def problems_solved_get():
+            problem_solved_section = soup.find('section', class_='rating-data-section problems-solved')
+
+            no_solved = problem_solved_section.find_all('h5')
+
+            categories = problem_solved_section.find_all('article')
+
+            fully_solved = {'count': re.findall('\d+', no_solved[0].text)[0]}
+            for category in categories[0].find_all('p'):
+                category_name = category.find('strong').text[:-1]
+                fully_solved[category_name] = []
+
+                for prob in category.find_all('a'):
+                    fully_solved[category_name].append({'name': prob.text,
+                                                        'link': 'https://www.codechef.com/' + prob['href']})
+
+            partially_solved = {'count': re.findall('\d+', no_solved[1].text)[0]}
+            for category in categories[1].find_all('p'):
+                category_name = category.find('strong').text[:-1]
+                partially_solved[category_name] = []
+
+                for prob in category.find_all('a'):
+                    partially_solved[category_name].append({'name': prob.text,
+                                                            'link': 'https://www.codechef.com/' + prob['href']})
+
+            return fully_solved, partially_solved
+
+        full, partial = problems_solved_get()
         details = {'status': 'Success', 'rank': rank, 'rating': rating, 'global rank': global_rank,
-                   'country rank': country_rank, 'contests': contests_details_get(),
-                   'contest_ratings': contest_rating_details_get()}
+                   'country_rank': country_rank, 'contests': contests_details_get(),
+                   'contest_ratings': contest_rating_details_get(), 'fully_solved': full, 'partially_solved': partial}
 
         return details
 
