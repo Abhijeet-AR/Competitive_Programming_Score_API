@@ -46,17 +46,17 @@ class UserData:
 
             '''Can add ranking url to contests'''
 
-            long_challenge = {'name': 'Long Challenge', 'rating': rating_table_rows[1].text,
-                              'global_rank': rating_table_rows[2].a.hx.text,
-                              'country_rank': rating_table_rows[3].a.hx.text}
+            long_challenge = {'name': 'Long Challenge', 'rating': int(rating_table_rows[1].text),
+                              'global_rank': int(rating_table_rows[2].a.hx.text),
+                              'country_rank': int(rating_table_rows[3].a.hx.text)}
 
-            cook_off = {'name': 'Cook-off', 'rating': rating_table_rows[5].text,
-                        'global_rank': rating_table_rows[6].a.hx.text,
-                        'country_rank': rating_table_rows[7].a.hx.text}
+            cook_off = {'name': 'Cook-off', 'rating': int(rating_table_rows[5].text),
+                        'global_rank': int(rating_table_rows[6].a.hx.text),
+                        'country_rank': int(rating_table_rows[7].a.hx.text)}
 
-            lunch_time = {'name': 'Lunch Time', 'rating': rating_table_rows[9].text,
-                          'global_rank': rating_table_rows[10].a.hx.text,
-                          'country_rank': rating_table_rows[11].a.hx.text}
+            lunch_time = {'name': 'Lunch Time', 'rating': int(rating_table_rows[9].text),
+                          'global_rank': int(rating_table_rows[10].a.hx.text),
+                          'country_rank': int(rating_table_rows[11].a.hx.text)}
 
             return [long_challenge, cook_off, lunch_time]
 
@@ -99,8 +99,8 @@ class UserData:
             return fully_solved, partially_solved
 
         full, partial = problems_solved_get()
-        details = {'status': 'Success', 'rank': rank, 'rating': rating, 'global_rank': global_rank,
-                   'country_rank': country_rank, 'contests': contests_details_get(),
+        details = {'status': 'Success', 'rank': int(rank), 'rating': rating, 'global_rank': int(global_rank),
+                   'country_rank': int(country_rank), 'contests': contests_details_get(),
                    'contest_ratings': contest_rating_details_get(), 'fully_solved': full, 'partially_solved': partial}
 
         return details
@@ -178,7 +178,7 @@ class UserData:
             return todo_problems
 
         details = {'status': 'Success', 'username': self.__username, 'platform': 'SPOJ',
-                   'points': points, 'rank': rank, 'solved': get_solved_problems(),
+                   'points': float(points), 'rank': int(rank), 'solved': get_solved_problems(),
                    'todo': get_todo(), 'join data': join_date, 'institute': institute}
 
         return details
@@ -196,8 +196,8 @@ class UserData:
         details_container = details_main.findChildren('div', recursive=False)
 
         details = {'status': 'Success', 'username': self.__username, 'platform': 'Interviewbit',
-                   'rank': details_container[0].find('div', class_='txt').text,
-                   'score': details_container[1].find('div', class_='txt').text,
+                   'rank': int(details_container[0].find('div', class_='txt').text),
+                   'score': int(details_container[1].find('div', class_='txt').text),
                    'streak': details_container[2].find('div', class_='txt').text}
 
         return details
