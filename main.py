@@ -21,7 +21,7 @@ class Details(Resource):
             return {'status': 'Failed', 'details': 'Invalid username'}
 
         except PlatformError:
-            return {'stats': 'Failed', 'details': 'Invalid Platform'}
+            return {'status': 'Failed', 'details': 'Invalid Platform'}
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
