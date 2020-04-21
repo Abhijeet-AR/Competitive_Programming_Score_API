@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
@@ -25,6 +25,12 @@ class Details(Resource):
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
+
+
+@app.errorhandler(404)
+def invalid_route(e):
+    return render_template('404.html')
+
 
 if __name__ == '__main__':
     app.run()

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    />
+    <style>
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #authentication-status {
+        font-size: 3em;
+        display: table;
+        visibility: visible;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+
+      #authentication-status .info {
+        font-size: 0.4em;
+      }
+      #authentication-status .timer {
+        font-size: 0.3em;
+      }
+
+      .alert {
+        visibility: hidden;
+        text-align: center;
+      }
+    </style>
+
+    <script language="JavaScript" type="text/javascript">
+      var time = 5;
+
+      function startTimer() {
+        if (time <= 0) {
+          window.location =
+            "https://github.com/Abhijeet-AR/Competitive_Programming_Score_API";
+          return;
+        } else {
+          time--;
+          document.getElementById("timer").innerHTML =
+            "Redirecting to GitHub in " + time + " seconds";
+          setTimeout(startTimer, 1000);
+        }
+      }
+
+      window.onload = startTimer;
+    </script>
+    <title>404</title>
+  </head>
+  <body>
+    <div class="alert alert-danger" id="authentication-status" role="alert">
+      <div style="display: table-cell; vertical-align: middle;">
+        <div>Error 404: PAGE NOT FOUND</div>
+        <div class="info">
+          Check
+          <a
+            href="https://github.com/Abhijeet-AR/Competitive_Programming_Score_API"
+            style="color: inherit;"
+            >this <i class="fab fa-github"></i> GitHub Repository</a
+          >
+          for usage instructions
+        </div>
+        <div class="timer" id="timer"></div>
+      </div>
+    </div>
+  </body>
+</html>

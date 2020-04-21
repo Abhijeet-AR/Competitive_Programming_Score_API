@@ -222,8 +222,8 @@ class UserData:
 
 
 if __name__ == '__main__':
-    ud = UserData('ainesh02')
+    ud = UserData('abhijeet_ar')
 
-    ans = ud.get_details('codeforces')
+    ans = ud.get_details('codechef')
 
     print(ans)
