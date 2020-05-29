@@ -46,17 +46,36 @@ class UserData:
 
             '''Can add ranking url to contests'''
 
-            long_challenge = {'name': 'Long Challenge', 'rating': int(rating_table_rows[1].text),
-                              'global_rank': int(rating_table_rows[2].a.hx.text),
-                              'country_rank': int(rating_table_rows[3].a.hx.text)}
+            try:
+                long_challenge = {'name': 'Long Challenge', 'rating': int(rating_table_rows[1].text),
+                                  'global_rank': int(rating_table_rows[2].a.hx.text),
+                                  'country_rank': int(rating_table_rows[3].a.hx.text)}
 
-            cook_off = {'name': 'Cook-off', 'rating': int(rating_table_rows[5].text),
-                        'global_rank': int(rating_table_rows[6].a.hx.text),
-                        'country_rank': int(rating_table_rows[7].a.hx.text)}
+            except ValueError:
+                long_challenge = {'name': 'Long Challenge', 'rating': int(rating_table_rows[1].text),
+                                  'global_rank': rating_table_rows[2].a.hx.text,
+                                  'country_rank': rating_table_rows[3].a.hx.text}
 
-            lunch_time = {'name': 'Lunch Time', 'rating': int(rating_table_rows[9].text),
-                          'global_rank': int(rating_table_rows[10].a.hx.text),
-                          'country_rank': int(rating_table_rows[11].a.hx.text)}
+            try:
+                cook_off = {'name': 'Cook-off',
+                            'rating': int(rating_table_rows[5].text),
+                            'global_rank': int(rating_table_rows[6].a.hx.text),
+                            'country_rank': int(rating_table_rows[7].a.hx.text)}
+            except ValueError:
+                cook_off = {'name': 'Cook-off',
+                            'rating': int(rating_table_rows[5].text),
+                            'global_rank': rating_table_rows[6].a.hx.text,
+                            'country_rank': rating_table_rows[7].a.hx.text}
+
+            try:
+                lunch_time = {'name': 'Lunch Time', 'rating': int(rating_table_rows[9].text),
+                              'global_rank': int(rating_table_rows[10].a.hx.text),
+                              'country_rank': int(rating_table_rows[11].a.hx.text)}
+
+            except ValueError:
+                lunch_time = {'name': 'Lunch Time', 'rating': int(rating_table_rows[9].text),
+                              'global_rank': int(rating_table_rows[10].a.hx.text),
+                              'country_rank': int(rating_table_rows[11].a.hx.text)}
 
             return [long_challenge, cook_off, lunch_time]
 
