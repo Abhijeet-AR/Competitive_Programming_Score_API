@@ -169,6 +169,12 @@ class UserData:
         join_date = details_container[1].text.split()[1] + ' ' + details_container[1].text.split()[2]
         institute = ' '.join(details_container[3].text.split()[1:])
 
+        try:
+            points = float(points)
+
+        except ValueError:
+            raise UsernameError('User not Found')
+
         def get_solved_problems():
             table = soup.find('table', class_='table table-condensed')
 
