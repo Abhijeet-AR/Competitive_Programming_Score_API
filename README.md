@@ -10,6 +10,9 @@ https://competitive-coding-api.herokuapp.com/api/{platform_name}/{user_name}
 ### Example
 https://competitive-coding-api.herokuapp.com/api/codechef/abhijeet_ar
 
+### Pro Tip
+Use this [JSON Formatter Chrome Extension](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?hl=en) to view in a structured format.
+
 ## Platforms Available 
 * Codeforces
 * Codechef
