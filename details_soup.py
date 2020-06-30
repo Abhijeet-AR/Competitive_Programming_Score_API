@@ -27,11 +27,14 @@ class UserData:
         soup = BeautifulSoup(page.text, 'html.parser')
 
         try:
-            rank = soup.find('div', class_='rating-number').text
+            rating = soup.find('div', class_='rating-number').text
         except AttributeError:
             raise UsernameError('User not Found')
 
-        rating = soup.find('span', class_='rating').text
+        stars = soup.find('span', class_='rating').text
+
+        highest_rating_container = soup.find('div', class_='rating-header')
+        highest_rating = highest_rating_container.find_next('small').text.split()[-1].rstrip(')')
 
         rating_ranks_container = soup.find('div', class_='rating-ranks')
         rating_ranks = rating_ranks_container.find_all('a')
@@ -117,9 +120,24 @@ class UserData:
 
             return fully_solved, partially_solved
 
+        def user_details_get():
+            header_containers = soup.find_all('header')
+            name = header_containers[1].find('h2').text
+
+            user_details_section = soup.find('section', class_='user-details')
+            user_details_list = user_details_section.find_all('li')
+
+            return {'name': name, 'username': user_details_list[0].text.split('★')[-1].rstrip('\n'),
+                    'country': user_details_list[1].text.split(':')[-1].strip(),
+                    'state': user_details_list[2].text.split(':')[-1].strip(),
+                    'city': user_details_list[3].text.split(':')[-1].strip(),
+                    'student/professional': user_details_list[4].text.split(':')[-1].strip(),
+                    'institution': user_details_list[5].text.split(':')[-1].strip()}
+
         full, partial = problems_solved_get()
-        details = {'status': 'Success', 'rank': int(rank), 'rating': rating, 'global_rank': int(global_rank),
-                   'country_rank': int(country_rank), 'contests': contests_details_get(),
+        details = {'status': 'Success', 'rating': int(rating), 'stars': stars, 'highest_rating': int(highest_rating),
+                   'global_rank': int(global_rank), 'country_rank': int(country_rank),
+                   'user_details': user_details_get(), 'contests': contests_details_get(),
                    'contest_ratings': contest_rating_details_get(), 'fully_solved': full, 'partially_solved': partial}
 
         return details
