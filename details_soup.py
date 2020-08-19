@@ -86,10 +86,10 @@ class UserData:
             start_ind = page.text.find('[', page.text.find('all_rating'))
             end_ind = page.text.find(']', start_ind) + 1
 
-            # next_opening_brack = page.text.find('[', start_ind+1)
-            # while next_opening_brack < end_ind:
-            #     end_ind = page.text.find(']', end_ind+1) + 1
-            #     next_opening_brack = page.text.find('[', next_opening_brack+1)
+            next_opening_brack = page.text.find('[', start_ind+1)
+            while next_opening_brack < end_ind:
+                end_ind = page.text.find(']', end_ind+1) + 1
+                next_opening_brack = page.text.find('[', next_opening_brack+1)
 
             all_rating = json.loads(page.text[start_ind: end_ind])
             for rating_contest in all_rating:
