@@ -3,6 +3,7 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 
 from details_soup import UserData, UsernameError, PlatformError
+from send_mail import Mail
 
 app = Flask(__name__)
 CORS(app)
@@ -22,6 +23,12 @@ class Details(Resource):
 
         except PlatformError:
             return {'status': 'Failed', 'details': 'Invalid Platform'}
+
+        except Exception as e:
+            # Reporting bug to me via Email for faster bug detection
+            # Comment this part
+            mail = Mail()
+            mail.send_bug_detected()
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
