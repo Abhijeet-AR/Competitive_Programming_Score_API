@@ -77,8 +77,8 @@ class UserData:
 
             except ValueError:
                 lunch_time = {'name': 'Lunch Time', 'rating': int(rating_table_rows[9].text),
-                              'global_rank': int(rating_table_rows[10].a.hx.text),
-                              'country_rank': int(rating_table_rows[11].a.hx.text)}
+                              'global_rank': rating_table_rows[10].a.hx.text,
+                              'country_rank': rating_table_rows[11].a.hx.text}
 
             return [long_challenge, cook_off, lunch_time]
 
