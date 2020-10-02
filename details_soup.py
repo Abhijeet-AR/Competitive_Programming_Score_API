@@ -1,12 +1,11 @@
 import json
 import re
 import requests
-from bs4 import BeautifulSoup
+import os
 
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 
 class UsernameError(Exception):
     pass
@@ -256,14 +255,16 @@ class UserData:
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
         
-        options = Options()
-        options.headless = True
+        options = webdriver.ChromeOptions()
+        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox")
 
         #driver = webdriver.PhantomJS(executable_path='./phantomjs')
         
-        driver = webdriver.Chrome(options=options, executable_path='./chromedriver')
-        action = ActionChains(driver)
-        driver.get(url) 
+        driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+        driver.get(url)
 
         hover_ranking = driver.find_element_by_class_name('ranking')
         ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
