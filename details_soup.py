@@ -269,21 +269,27 @@ class UserData:
         ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
 
         ranking = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[1]/div[2]/div[2]').text
-
+      
         finished_contests = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[2]/ul/li/span').text
 
-        solved_questions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[1]/span').text
-        
-        accepted_submission = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[2]/span').text
-        
         acceptance_rate = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[3]/span').text
-       
+
+        get_solved_questions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[1]/span').text
+        
+        get_accepted_submissions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[2]/span').text
+
         driver.close()
+
+        solved_questions, total_questions = get_solved_questions.split('/')
+
+        accepted_submissions, total_submissions = get_accepted_submissions.split('/')
 
         details = {'status': 'Success', 'ranking': ranking[9:],
                     'finished_contests': finished_contests,
-                    'solved_questions': solved_questions,
-                    'accepted_submission': accepted_submission,
+                    'solved_questions': solved_questions.strip(),
+                    'total_questions' : total_questions.strip(),
+                    'accepted_submissions': accepted_submissions.strip(),
+                    'total_submissions': total_submissions.strip(),
                     'acceptance_rate': acceptance_rate}
 
         return details
