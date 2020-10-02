@@ -18,5 +18,6 @@ Use this [JSON Formatter Chrome Extension](https://chrome.google.com/webstore/de
 * Codechef
 * SPOJ
 * Interviewbit
+* Leetcode (new)
 
 If you would like to leave a feedback or request a feature, please [open an issue](https://github.com/Abhijeet-AR/Competitive_Programming_Score_API/issues) or feel free to PR. Do follow [these](https://help.github.com/articles/creating-a-pull-request/) instructions to make a valid PR.
