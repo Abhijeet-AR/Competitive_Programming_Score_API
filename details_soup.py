@@ -3,6 +3,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 class UsernameError(Exception):
     pass
@@ -249,6 +253,42 @@ class UserData:
 
         return details
 
+    def __leetcode(self):
+        url = 'https://leetcode.com/{}'.format(self.__username)
+        
+        options = Options()
+        options.headless = True
+
+        #driver = webdriver.PhantomJS(executable_path='./phantomjs')
+        
+        driver = webdriver.Chrome(options=options, executable_path='./chromedriver')
+        action = ActionChains(driver)
+        driver.get(url) 
+
+        hover_ranking = driver.find_element_by_class_name('ranking')
+        ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
+
+        ranking = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[1]/div[2]/div[2]').text
+
+        finished_contests = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[2]/ul/li/span').text
+
+        solved_questions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[1]/span').text
+        
+        accepted_submission = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[2]/span').text
+        
+        acceptance_rate = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[3]/span').text
+       
+        driver.close()
+
+        details = {'status': 'Success', 'ranking': ranking[9:],
+                    'finished_contests': finished_contests,
+                    'solved_questions': solved_questions,
+                    'accepted_submission': accepted_submission,
+                    'acceptance_rate': acceptance_rate}
+
+        return details
+
+
     def get_details(self, platform):
         if platform == 'codechef':
             return self.__codechef()
@@ -264,6 +304,9 @@ class UserData:
 
         if platform == 'interviewbit':
             return self.__interviewbit()
+
+        if platform == 'leetcode':
+            return self.__leetcode()
 
         raise PlatformError('Platform not Found')
 
