@@ -264,33 +264,52 @@ class UserData:
         driver = webdriver.Chrome(options=options, executable_path='./chromedriver')
         action = ActionChains(driver)
         driver.get(url) 
+        driver.implicitly_wait(10)
+        
+        action = ActionChains(driver)
 
-        hover_ranking = driver.find_element_by_class_name('ranking')
+        hover_ranking = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[3]/div')
         ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
 
-        ranking = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[1]/div[2]/div[2]').text
-      
-        finished_contests = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[2]/ul/li/span').text
+        ranking = driver.find_element_by_xpath('/html/body/div[5]/div/div/div/div[2]').text
 
-        acceptance_rate = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[3]/span').text
+        total_problems_solved = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[1]/div[2]').text
+       
+        acceptance_rate_span_1 = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[1]').text
+        acceptance_rate_span_2 = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[2]').text
+        acceptance_rate = str(acceptance_rate_span_1) + str(acceptance_rate_span_2) + '%'
 
-        get_solved_questions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[1]/span').text
+        get_easy_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]').text
+        easy_questions_solved, total_easy_questions = get_easy_questions.split('/')
+       
+        get_medium_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]').text
+        medium_questions_solved, total_medium_questions = get_medium_questions.split('/')
+
+        get_hard_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]').text
+        hard_questions_solved, total_hard_questions = get_hard_questions.split('/')
+
+        contribution_points = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[1]/span').text
         
-        get_accepted_submissions = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div[1]/div[3]/ul/li[2]/span').text
-
-        driver.close()
-
-        solved_questions, total_questions = get_solved_questions.split('/')
-
-        accepted_submissions, total_submissions = get_accepted_submissions.split('/')
+        contribution_problems = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[2]/span').text
+        
+        contribution_testcases = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[3]/span').text
+       
+        reputation = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[4]/div[2]/div/div/div/li/span').text
 
         details = {'status': 'Success', 'ranking': ranking[9:],
-                    'finished_contests': finished_contests,
-                    'solved_questions': solved_questions.strip(),
-                    'total_questions' : total_questions.strip(),
-                    'accepted_submissions': accepted_submissions.strip(),
-                    'total_submissions': total_submissions.strip(),
-                    'acceptance_rate': acceptance_rate}
+                    'total_problems_solved': total_problems_solved,
+                    'acceptance_rate': acceptance_rate,
+                    'easy_questions_solved' : easy_questions_solved,
+                    'total_easy_questions': total_easy_questions,
+                    'medium_questions_solved': medium_questions_solved,
+                    'total_medium_questions' : total_medium_questions,
+                    'hard_questions_solved': hard_questions_solved,
+                    'total_hard_questions': total_hard_questions,
+                    'contribution_points': contribution_points,
+                    'contribution_problems': contribution_problems,
+                    'contribution_testcases': contribution_testcases,
+                    'reputation': reputation}
+        
 
         return details
 
