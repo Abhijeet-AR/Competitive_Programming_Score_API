@@ -1,12 +1,11 @@
 import json
 import re
 import requests
-from bs4 import BeautifulSoup
+import os
 
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 
 class UsernameError(Exception):
     pass
@@ -35,7 +34,9 @@ class UserData:
         except AttributeError:
             raise UsernameError('User not Found')
 
-        stars = soup.find('span', class_='rating').text
+        stars = soup.find('span', class_='rating')
+        if stars:
+            stars = stars.text
 
         highest_rating_container = soup.find('div', class_='rating-header')
         highest_rating = highest_rating_container.find_next('small').text.split()[-1].rstrip(')')
@@ -45,6 +46,10 @@ class UserData:
 
         global_rank = rating_ranks[0].strong.text
         country_rank = rating_ranks[1].strong.text
+
+        if global_rank != 'NA':
+            global_rank = int(global_rank)
+            country_rank = int(country_rank)
 
         def contests_details_get():
             rating_table = soup.find('table', class_='rating-table')
@@ -108,22 +113,25 @@ class UserData:
 
             categories = problem_solved_section.find_all('article')
 
-            fully_solved = {'count': re.findall('\d+', no_solved[0].text)[0]}
-            for category in categories[0].find_all('p'):
-                category_name = category.find('strong').text[:-1]
-                fully_solved[category_name] = []
+            fully_solved = {'count': int(re.findall('\d+', no_solved[0].text)[0])}
 
-                for prob in category.find_all('a'):
-                    fully_solved[category_name].append({'name': prob.text,
-                                                        'link': 'https://www.codechef.com' + prob['href']})
+            if fully_solved['count'] != 0:
+                for category in categories[0].find_all('p'):
+                    category_name = category.find('strong').text[:-1]
+                    fully_solved[category_name] = []
 
-            partially_solved = {'count': re.findall('\d+', no_solved[1].text)[0]}
-            for category in categories[1].find_all('p'):
-                category_name = category.find('strong').text[:-1]
-                partially_solved[category_name] = []
+                    for prob in category.find_all('a'):
+                        fully_solved[category_name].append({'name': prob.text,
+                                                            'link': 'https://www.codechef.com' + prob['href']})
 
-                for prob in category.find_all('a'):
-                    partially_solved[category_name].append({'name': prob.text,
+            partially_solved = {'count': int(re.findall('\d+', no_solved[1].text)[0])}
+            if partially_solved['count'] != 0:
+                for category in categories[1].find_all('p'):
+                    category_name = category.find('strong').text[:-1]
+                    partially_solved[category_name] = []
+
+                    for prob in category.find_all('a'):
+                        partially_solved[category_name].append({'name': prob.text,
                                                             'link': 'https://www.codechef.com' + prob['href']})
 
             return fully_solved, partially_solved
@@ -144,7 +152,7 @@ class UserData:
 
         full, partial = problems_solved_get()
         details = {'status': 'Success', 'rating': int(rating), 'stars': stars, 'highest_rating': int(highest_rating),
-                   'global_rank': int(global_rank), 'country_rank': int(country_rank),
+                   'global_rank': global_rank, 'country_rank': country_rank,
                    'user_details': user_details_get(), 'contests': contests_details_get(),
                    'contest_ratings': contest_rating_details_get(), 'fully_solved': full, 'partially_solved': partial}
 
@@ -256,14 +264,17 @@ class UserData:
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
         
-        options = Options()
-        options.headless = True
+        options = webdriver.ChromeOptions()
+        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox")
 
         #driver = webdriver.PhantomJS(executable_path='./phantomjs')
         
-        driver = webdriver.Chrome(options=options, executable_path='./chromedriver')
-        action = ActionChains(driver)
-        driver.get(url) 
+        driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+        driver.get(url)
+            
         driver.implicitly_wait(10)
         
         action = ActionChains(driver)
