@@ -272,7 +272,7 @@ class UserData:
 
         #driver = webdriver.PhantomJS(executable_path='./phantomjs')
         
-        driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+        driver = webdriver.Chrome(options=options, executable_path="./chromedriver")
         driver.get(url)
             
         driver.implicitly_wait(10)
