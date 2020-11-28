@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 class UsernameError(Exception):
     pass
 
@@ -95,10 +96,10 @@ class UserData:
             start_ind = page.text.find('[', page.text.find('all_rating'))
             end_ind = page.text.find(']', start_ind) + 1
 
-            next_opening_brack = page.text.find('[', start_ind+1)
+            next_opening_brack = page.text.find('[', start_ind + 1)
             while next_opening_brack < end_ind:
-                end_ind = page.text.find(']', end_ind+1) + 1
-                next_opening_brack = page.text.find('[', next_opening_brack+1)
+                end_ind = page.text.find(']', end_ind + 1) + 1
+                next_opening_brack = page.text.find('[', next_opening_brack + 1)
 
             all_rating = json.loads(page.text[start_ind: end_ind])
             for rating_contest in all_rating:
@@ -132,7 +133,7 @@ class UserData:
 
                     for prob in category.find_all('a'):
                         partially_solved[category_name].append({'name': prob.text,
-                                                            'link': 'https://www.codechef.com' + prob['href']})
+                                                                'link': 'https://www.codechef.com' + prob['href']})
 
             return fully_solved, partially_solved
 
@@ -261,69 +262,83 @@ class UserData:
 
         return details
 
-      
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
-        
+
+        if requests.get(url).status_code != 200:
+            raise UsernameError('User not Found')
+
         options = webdriver.ChromeOptions()
         options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         options.add_argument("--headless")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox")
 
-        #driver = webdriver.PhantomJS(executable_path='./phantomjs')
-        
+        # driver = webdriver.PhantomJS(executable_path='./phantomjs')
+
         driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
         driver.get(url)
-            
-        driver.implicitly_wait(10)
-        
-        action = ActionChains(driver)
 
-        hover_ranking = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[3]/div')
+        driver.implicitly_wait(10)
+
+        hover_ranking = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[3]/div')
         ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
 
-        ranking = driver.find_element_by_xpath('/html/body/div[5]/div/div/div/div[2]').text
+        ranking = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]').text
+        print('rank: ', ranking)
 
-        total_problems_solved = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[1]/div[2]').text
-       
-        acceptance_rate_span_1 = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[1]').text
-        acceptance_rate_span_2 = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[2]').text
-        acceptance_rate = str(acceptance_rate_span_1) + str(acceptance_rate_span_2) + '%'
+        total_problems_solved = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[1]/div[2]').text
 
-        get_easy_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]').text
-        easy_questions_solved, total_easy_questions = get_easy_questions.split('/')
-       
-        get_medium_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]').text
-        medium_questions_solved, total_medium_questions = get_medium_questions.split('/')
+        acceptance_rate_span_1 = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[1]').text
+        acceptance_rate_span_2 = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[2]').text
+        acceptance_rate = str(acceptance_rate_span_1) + str(acceptance_rate_span_2)
 
-        get_hard_questions = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]').text
-        hard_questions_solved, total_hard_questions = get_hard_questions.split('/')
+        easy_questions_solved = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[1]').text
+        total_easy_questions = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[2]').text
 
-        contribution_points = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[1]/span').text
-        
-        contribution_problems = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[2]/span').text
-        
-        contribution_testcases = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[3]/span').text
-       
-        reputation = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[1]/div[4]/div[2]/div/div/div/li/span').text
+        medium_questions_solved = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[1]').text
+        total_medium_questions = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[2]').text
+
+        hard_questions_solved = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[1]').text
+        total_hard_questions = driver.find_element_by_xpath(
+            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[2]').text
+
+        contribution_points = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[1]/span').text
+
+        contribution_problems = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[2]/span').text
+
+        contribution_testcases = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[3]/span').text
+
+        reputation = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[2]/div/div[1]/div[4]/div[2]/div/div/div/li/span').text
 
         details = {'status': 'Success', 'ranking': ranking[9:],
-                    'total_problems_solved': total_problems_solved,
-                    'acceptance_rate': acceptance_rate,
-                    'easy_questions_solved' : easy_questions_solved,
-                    'total_easy_questions': total_easy_questions,
-                    'medium_questions_solved': medium_questions_solved,
-                    'total_medium_questions' : total_medium_questions,
-                    'hard_questions_solved': hard_questions_solved,
-                    'total_hard_questions': total_hard_questions,
-                    'contribution_points': contribution_points,
-                    'contribution_problems': contribution_problems,
-                    'contribution_testcases': contribution_testcases,
-                    'reputation': reputation}
+                   'total_problems_solved': total_problems_solved,
+                   'acceptance_rate': acceptance_rate,
+                   'easy_questions_solved': easy_questions_solved,
+                   'total_easy_questions': total_easy_questions,
+                   'medium_questions_solved': medium_questions_solved,
+                   'total_medium_questions': total_medium_questions,
+                   'hard_questions_solved': hard_questions_solved,
+                   'total_hard_questions': total_hard_questions,
+                   'contribution_points': contribution_points,
+                   'contribution_problems': contribution_problems,
+                   'contribution_testcases': contribution_testcases,
+                   'reputation': reputation}
 
         return details
-
 
     def get_details(self, platform):
         if platform == 'codechef':

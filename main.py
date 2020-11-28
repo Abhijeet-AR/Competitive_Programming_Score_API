@@ -24,12 +24,6 @@ class Details(Resource):
         except PlatformError:
             return {'status': 'Failed', 'details': 'Invalid Platform'}
 
-        except Exception as e:
-            # Reporting bug to me via Email for faster bug detection
-            # Comment this part
-            mail = Mail()
-            mail.send_bug_detected()
-
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
 
