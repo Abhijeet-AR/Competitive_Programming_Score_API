@@ -261,6 +261,7 @@ class UserData:
 
         return details
 
+      
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
         
@@ -272,7 +273,7 @@ class UserData:
 
         #driver = webdriver.PhantomJS(executable_path='./phantomjs')
         
-        driver = webdriver.Chrome(options=options, executable_path="./chromedriver")
+        driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
         driver.get(url)
             
         driver.implicitly_wait(10)
@@ -320,7 +321,6 @@ class UserData:
                     'contribution_problems': contribution_problems,
                     'contribution_testcases': contribution_testcases,
                     'reputation': reputation}
-        
 
         return details
 
