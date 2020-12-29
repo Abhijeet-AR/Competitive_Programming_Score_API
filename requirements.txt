@@ -6,6 +6,7 @@ Click==7.0
 Flask==1.1.1
 Flask-Cors==3.0.8
 Flask-RESTful==0.3.7
+grequests==0.6.0
 gunicorn==20.0.4
 idna==2.8
 itsdangerous==1.1.0
