@@ -1,5 +1,7 @@
 import json
 import re
+# DO NOT import this after requests
+import grequests
 import requests
 import os
 
@@ -114,7 +116,7 @@ class UserData:
 
             categories = problem_solved_section.find_all('article')
 
-            fully_solved = {'count': int(re.findall('\d+', no_solved[0].text)[0])}
+            fully_solved = {'count': int(re.findall(r'\d+', no_solved[0].text)[0])}
 
             if fully_solved['count'] != 0:
                 for category in categories[0].find_all('p'):
@@ -125,7 +127,7 @@ class UserData:
                         fully_solved[category_name].append({'name': prob.text,
                                                             'link': 'https://www.codechef.com' + prob['href']})
 
-            partially_solved = {'count': int(re.findall('\d+', no_solved[1].text)[0])}
+            partially_solved = {'count': int(re.findall(r'\d+', no_solved[1].text)[0])}
             if partially_solved['count'] != 0:
                 for category in categories[1].find_all('p'):
                     category_name = category.find('strong').text[:-1]
@@ -160,16 +162,40 @@ class UserData:
         return details
 
     def __codeforces(self):
-        url = 'https://codeforces.com/api/user.info?handles={}'.format(self.__username)
+        urls = {
+            "user_info": {"url": f'https://codeforces.com/api/user.info?handles={self.__username}'},
+            "user_contests": {"url": f'https://codeforces.com/contests/with/{self.__username}'}
+        }
 
-        page = requests.get(url)
+        reqs = [grequests.get(item["url"]) for item in urls.values() if item.get("url")]
 
-        if page.status_code != 200:
-            raise UsernameError('User not Found')
+        responses = grequests.map(reqs)
 
-        details_api = page.json()
+        details_api = {}
+        contests = []
+        for page in responses:
+            if page.status_code != 200:
+                raise UsernameError('User not Found')
+            if page.request.url == urls["user_info"]["url"]:
+                details_api = page.json()
+            elif page.request.url == urls["user_contests"]["url"]:
+                soup = BeautifulSoup(page.text, 'html.parser')
+                table = soup.find('table', attrs={'class': 'user-contests-table'})
+                table_body = table.find('tbody')
 
-        if details_api['status'] != 'OK':
+                rows = table_body.find_all('tr')
+                for row in rows:
+                    cols = row.find_all('td')
+                    cols = [ele.text.strip() for ele in cols]
+                    contests.append({
+                        "Contest": cols[1],
+                        "Rank": cols[3],
+                        "Solved": cols[4],
+                        "Rating Change": cols[5],
+                        "New Rating": cols[6]
+                    })
+
+        if details_api.get('status') != 'OK':
             raise UsernameError('User not Found')
 
         details_api = details_api['result'][0]
@@ -186,10 +212,16 @@ class UserData:
             rank = 'Unrated'
             max_rank = 'Unrated'
 
-        details = {'status': 'Success', 'username': self.__username, 'platform': 'Codeforces',
-                   'rating': rating, 'max rating': max_rating, 'rank': rank, 'max rank': max_rank}
-
-        return details
+        return {
+            'status': 'Success',
+            'username': self.__username,
+            'platform': 'Codeforces',
+            'rating': rating,
+            'max rating': max_rating,
+            'rank': rank,
+            'max rank': max_rank,
+            'contests': contests
+        }
 
     def __spoj(self):
         url = 'https://www.spoj.com/users/{}/'.format(self.__username)
@@ -365,6 +397,6 @@ class UserData:
 if __name__ == '__main__':
     ud = UserData('abhijeet_ar')
 
-    ans = ud.get_details('codechef')
+    ans = ud.get_details('codeforces')
 
     print(ans)
