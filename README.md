@@ -15,7 +15,7 @@ https://competitive-coding-api.herokuapp.com/api/codechef/abhijeet_ar
 
 Replace `<USERNAME>` with your username on that platform.
 
-#### <a href="https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/abhijeet_ar&query=%24.rating&prefix=Rating%20&style=for-the-badge&cacheSeconds=259200" alt="abhijeet_ar's profile on Codeforces"></a>
+#### <a href="https://codeforces.com/profile/abhijeet_ar"><img src="https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/abhijeet_ar&query=%24.rating&prefix=Rating%20&style=for-the-badge&cacheSeconds=259200" alt="abhijeet_ar's profile on Codeforces"></a>
 `https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/<USERNAME>&query=%24.<FIELD>&prefix=<TEXT>&style=for-the-badge`
 Suggested use,
 * `FIELD` = `rating`
