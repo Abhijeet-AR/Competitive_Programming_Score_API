@@ -15,16 +15,16 @@ https://competitive-coding-api.herokuapp.com/api/codechef/abhijeet_ar
 
 Replace `<USERNAME>` with your username on that platform.
 
-#### ![Codeforces static badge](https://img.shields.io/badge/Codeforces-Rating%20Unrated-informational?logo=codeforces&style=for-the-badge)
+#### <a href="https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/abhijeet_ar&query=%24.rating&prefix=Rating%20&style=for-the-badge&cacheSeconds=259200" alt="abhijeet_ar's profile on Codeforces"></a>
 `https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/<USERNAME>&query=%24.<FIELD>&prefix=<TEXT>&style=for-the-badge`
 Suggested use,
 * `FIELD` = `rating`
 * `TEXT` = `Rating%20`
 
-#### ![CodeChef static badge](https://img.shields.io/badge/CodeChef-Rank%20NA-informational?logo=codechef&style=for-the-badge&logoColor=f5f5dc&labelColor=7b5e47)
+#### <a href="https://www.codechef.com/users/radix28_numb"><img src="https://img.shields.io/badge/dynamic/json?label=CodeChef&query=%24.country_rank&url=https://competitive-coding-api.herokuapp.com/api/codechef/radix28_numb&prefix=US%20%23&logo=codechef&logoColor=f5f5dc&labelColor=7b5e47&style=for-the-badge&cacheSeconds=259200" alt="radix28_numb's profile on CodeChef"></a>
 `https://img.shields.io/badge/dynamic/json?label=CodeChef&query=%24.global_rank&url=https://competitive-coding-api.herokuapp.com/api/codechef/<USERNAME>&prefix=<TEXT>&logo=codechef&logoColor=f5f5dc&labelColor=7b5e47&style=for-the-badge`
 Suggested use,
-* `TEXT` = `Rank%20` or country abbreviation (e.g., `US%20`)
+* `TEXT` = `Rank%20` or country abbreviation (e.g., `US%20%23`)
 * `FIELD` = `global_rank` or `country_rank`
 
 ### Pro Tip 💡
