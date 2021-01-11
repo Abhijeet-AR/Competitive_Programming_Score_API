@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
+from util import get_safe_nested_key
+
 
 class UsernameError(Exception):
     pass
@@ -294,6 +296,7 @@ class UserData:
 
         return details
 
+    # DEPRECATED
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
 
@@ -309,52 +312,56 @@ class UserData:
         # driver = webdriver.PhantomJS(executable_path='./phantomjs')
 
         driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
-        driver.get(url)
+        try:
+            driver.get(url)
 
-        driver.implicitly_wait(10)
+            driver.implicitly_wait(10)
 
-        hover_ranking = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[3]/div')
-        ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
+            hover_ranking = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[3]/div')
+            ActionChains(driver).move_to_element(to_element=hover_ranking).perform()
 
-        ranking = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]').text
-        print('rank: ', ranking)
+            ranking = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]').text
+            print('rank: ', ranking)
 
-        total_problems_solved = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[1]/div[2]').text
+            total_problems_solved = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[1]/div[2]').text
 
-        acceptance_rate_span_1 = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[1]').text
-        acceptance_rate_span_2 = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[2]').text
-        acceptance_rate = str(acceptance_rate_span_1) + str(acceptance_rate_span_2)
+            acceptance_rate_span_1 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[1]').text
+            acceptance_rate_span_2 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/span[2]').text
+            acceptance_rate = str(acceptance_rate_span_1) + str(acceptance_rate_span_2)
 
-        easy_questions_solved = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[1]').text
-        total_easy_questions = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[2]').text
+            easy_questions_solved = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[1]').text
+            total_easy_questions = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[2]/span[2]').text
 
-        medium_questions_solved = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[1]').text
-        total_medium_questions = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[2]').text
+            medium_questions_solved = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[1]').text
+            total_medium_questions = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/span[2]').text
 
-        hard_questions_solved = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[1]').text
-        total_hard_questions = driver.find_element_by_xpath(
-            '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[2]').text
+            hard_questions_solved = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[1]').text
+            total_hard_questions = driver.find_element_by_xpath(
+                '//*[@id="profile-root"]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/span[2]').text
 
-        contribution_points = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[1]/span').text
+            contribution_points = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[1]/span').text
 
-        contribution_problems = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[2]/span').text
+            contribution_problems = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[2]/span').text
 
-        contribution_testcases = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[3]/span').text
+            contribution_testcases = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[3]/div[2]/div/div/div/li[3]/span').text
 
-        reputation = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[2]/div/div[1]/div[4]/div[2]/div/div/div/li/span').text
+            reputation = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[2]/div/div[1]/div[4]/div[2]/div/div/div/li/span').text
+        finally:
+            driver.close()
+            driver.quit()
 
         details = {'status': 'Success', 'ranking': ranking[9:],
                    'total_problems_solved': total_problems_solved,
@@ -371,6 +378,98 @@ class UserData:
                    'reputation': reputation}
 
         return details
+
+    def __leetcode_v2(self):
+
+        def __parse_response(response):
+            total_submissions_count = 0
+            ac_submissions_count = 0
+            total_problems_solved = 0
+            total_easy_questions = 0
+            total_medium_questions = 0
+            total_hard_questions = 0
+            easy_questions_solved = 0
+            medium_questions_solved = 0
+            hard_questions_solved = 0
+
+            ranking = get_safe_nested_key(['data', 'matchedUser', 'profile', 'ranking'], response)
+            if ranking > 100000:
+                ranking = '~100000'
+
+            reputation = get_safe_nested_key(['data', 'matchedUser', 'profile', 'reputation'], response)
+
+            total_questions_stats = get_safe_nested_key(['data', 'allQuestionsCount'], response)
+            for item in total_questions_stats:
+                if item['difficulty'] == "Easy":
+                    total_easy_questions = item['count']
+                if item['difficulty'] == "Medium":
+                    total_medium_questions = item['count']
+                if item['difficulty'] == "Hard":
+                    total_hard_questions = item['count']
+
+            ac_submissions = get_safe_nested_key(['data', 'matchedUser', 'submitStats', 'acSubmissionNum'], response)
+            for submission in ac_submissions:
+                if submission['difficulty'] == "All":
+                    ac_submissions_count = submission['submissions']
+
+            total_submissions = get_safe_nested_key(['data', 'matchedUser', 'submitStats', 'totalSubmissionNum'],
+                                                    response)
+            for submission in total_submissions:
+                if submission['difficulty'] == "All":
+                    total_problems_solved = submission['count']
+                    total_submissions_count = submission['submissions']
+                if submission['difficulty'] == "Easy":
+                    easy_questions_solved = submission['count']
+                if submission['difficulty'] == "Medium":
+                    medium_questions_solved = submission['count']
+                if submission['difficulty'] == "Hard":
+                    hard_questions_solved = submission['count']
+
+            if total_submissions_count > 0:
+                acceptance_rate = round(ac_submissions_count * 100 / total_submissions_count, 2)
+            else:
+                acceptance_rate = 0
+
+            contribution_points = get_safe_nested_key(['data', 'matchedUser', 'contributions', 'points'],
+                                                      response)
+            contribution_problems = get_safe_nested_key(['data', 'matchedUser', 'contributions', 'questionCount'],
+                                                        response)
+            contribution_testcases = get_safe_nested_key(['data', 'matchedUser', 'contributions', 'testcaseCount'],
+                                                         response)
+
+            return {
+                'status': 'Success',
+                'ranking': str(ranking),
+                'total_problems_solved': str(total_problems_solved),
+                'acceptance_rate': f"{acceptance_rate}%",
+                'easy_questions_solved': str(easy_questions_solved),
+                'total_easy_questions': str(total_easy_questions),
+                'medium_questions_solved': str(medium_questions_solved),
+                'total_medium_questions': str(total_medium_questions),
+                'hard_questions_solved': str(hard_questions_solved),
+                'total_hard_questions': str(total_hard_questions),
+                'contribution_points': str(contribution_points),
+                'contribution_problems': str(contribution_problems),
+                'contribution_testcases': str(contribution_testcases),
+                'reputation': str(reputation)
+            }
+
+        url = f'https://leetcode.com/{self.__username}'
+        if requests.get(url).status_code != 200:
+            raise UsernameError('User not Found')
+        payload = {
+            "operationName": "getUserProfile",
+            "variables": {
+                "username": self.__username
+            },
+            "query": "query getUserProfile($username: String!) {  allQuestionsCount {    difficulty    count  }  matchedUser(username: $username) {    contributions {    points      questionCount      testcaseCount    }    profile {    reputation      ranking    }    submitStats {      acSubmissionNum {        difficulty        count        submissions      }      totalSubmissionNum {        difficulty        count        submissions      }    }  }}"
+        }
+        res = requests.post(url='https://leetcode.com/graphql',
+                            json=payload,
+                            headers={'referer': f'https://leetcode.com/{self.__username}/'})
+        res.raise_for_status()
+        res = res.json()
+        return __parse_response(res)
 
     def get_details(self, platform):
         if platform == 'codechef':
@@ -389,14 +488,22 @@ class UserData:
             return self.__interviewbit()
 
         if platform == 'leetcode':
-            return self.__leetcode()
+            return self.__leetcode_v2()
 
         raise PlatformError('Platform not Found')
 
 
 if __name__ == '__main__':
-    ud = UserData('abhijeet_ar')
-
-    ans = ud.get_details('codeforces')
+    ud = UserData('uwi')
+    ans = ud.get_details('leetcode')
 
     print(ans)
+
+    # leetcode backward compatibility test. Commenting it out as it will fail in future
+    # leetcode_ud = UserData('saurabhprakash')
+    # leetcode_ans = leetcode_ud.get_details('leetcode')
+    # assert leetcode_ans == dict(status='Success', ranking='~100000', total_problems_solved='10',
+    #                             acceptance_rate='56.0%', easy_questions_solved='3', total_easy_questions='457',
+    #                             medium_questions_solved='5', total_medium_questions='901', hard_questions_solved='2',
+    #                             total_hard_questions='365', contribution_points='58', contribution_problems='0',
+    #                             contribution_testcases='0', reputation='0')
