@@ -380,21 +380,6 @@ class UserData:
         return details
 
     def __leetcode_v2(self):
-        def __get_csrf_token():
-            options = webdriver.ChromeOptions()
-            options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-            options.add_argument("--headless")
-            options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--no-sandbox")
-
-            driver = webdriver.Chrome(options=options, executable_path=os.environ.get("CHROMEDRIVER_PATH"))
-            try:
-                driver.get(url)
-                csrf_token = driver.get_cookie('csrftoken')
-            finally:
-                driver.close()
-                driver.quit()
-            return csrf_token
 
         def __parse_response(response):
             total_submissions_count = 0
@@ -472,11 +457,6 @@ class UserData:
         url = f'https://leetcode.com/{self.__username}'
         if requests.get(url).status_code != 200:
             raise UsernameError('User not Found')
-
-        csrf_token = __get_csrf_token()
-        csrf_token_cookie = {
-            'csrftoken': csrf_token.get('value') if isinstance(csrf_token, dict) else None
-        }
         payload = {
             "operationName": "getUserProfile",
             "variables": {
@@ -486,7 +466,6 @@ class UserData:
         }
         res = requests.post(url='https://leetcode.com/graphql',
                             json=payload,
-                            cookies=csrf_token_cookie,
                             headers={'referer': f'https://leetcode.com/{self.__username}/'})
         res.raise_for_status()
         res = res.json()
