@@ -19,15 +19,15 @@ Replace `<USERNAME>` with your username on that platform.
 `https://img.shields.io/badge/dynamic/json?&color=1f8acb&logo=codeforces&label=Codeforces&url=https://competitive-coding-api.herokuapp.com/api/codeforces/<USERNAME>&query=%24.<FIELD>&prefix=<TEXT>&style=for-the-badge&cacheSeconds=86400`
 
 Suggested use,
-* `FIELD` = `rating`
-* `TEXT` = `Rating%20`
+* `<FIELD>` = `rating`
+* `<TEXT>` = `Rating%20`
 
 #### <a href="https://www.codechef.com/users/radix28_numb"><img src="https://img.shields.io/badge/dynamic/json?label=CodeChef&query=%24.country_rank&url=https://competitive-coding-api.herokuapp.com/api/codechef/radix28_numb&prefix=US%20%23&logo=codechef&logoColor=f5f5dc&labelColor=7b5e47&style=for-the-badge&cacheSeconds=259200" alt="radix28_numb's profile on CodeChef" title="radix28_numb's profile on CodeChef"></a>
 `https://img.shields.io/badge/dynamic/json?label=CodeChef&query=%24.global_rank&url=https://competitive-coding-api.herokuapp.com/api/codechef/<USERNAME>&prefix=<TEXT>&logo=codechef&logoColor=f5f5dc&labelColor=7b5e47&style=for-the-badge&cacheSeconds=86400`
 
 Suggested use,
-* `FIELD` = `global_rank`, `country_rank` or `rating`
-* `TEXT` = `Rank%20`, country abbreviation (e.g., `US%20%23`) or `Rating%20`
+* `<FIELD>` = `global_rank`, `country_rank` or `rating`
+* `<TEXT>` = `Rank%20`, country abbreviation (e.g., `US%20%23`) or `Rating%20`
 
 ### Pro Tip 💡
 Use this [JSON Formatter Chrome Extension](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?hl=en) to view in a structured format.
