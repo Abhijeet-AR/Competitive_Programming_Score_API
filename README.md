@@ -26,8 +26,8 @@ Suggested use,
 `https://img.shields.io/badge/dynamic/json?label=CodeChef&query=%24.global_rank&url=https://competitive-coding-api.herokuapp.com/api/codechef/<USERNAME>&prefix=<TEXT>&logo=codechef&logoColor=f5f5dc&labelColor=7b5e47&style=for-the-badge&cacheSeconds=86400`
 
 Suggested use,
-* `TEXT` = `Rank%20` or country abbreviation (e.g., `US%20%23`)
-* `FIELD` = `global_rank` or `country_rank`
+* `FIELD` = `global_rank`, `country_rank` or `rating`
+* `TEXT` = `Rank%20`, country abbreviation (e.g., `US%20%23`) or `Rating%20`
 
 ### Pro Tip 💡
 Use this [JSON Formatter Chrome Extension](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?hl=en) to view in a structured format.
