@@ -441,7 +441,7 @@ class UserData:
                     hard_questions_solved = submission['count']
 
             if total_submissions_count > 0:
-                acceptance_rate = round(ac_submissions_count / total_submissions_count * 100, 2)
+                acceptance_rate = round(ac_submissions_count * 100 / total_submissions_count, 2)
             else:
                 acceptance_rate = 0
 
