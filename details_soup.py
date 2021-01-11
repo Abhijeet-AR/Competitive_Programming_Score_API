@@ -520,11 +520,11 @@ if __name__ == '__main__':
 
     print(ans)
 
-    # leetcode backward compatibility test
-    leetcode_ud = UserData('saurabhprakash')
-    leetcode_ans = leetcode_ud.get_details('leetcode')
-    assert leetcode_ans == dict(status='Success', ranking='~100000', total_problems_solved='10',
-                                acceptance_rate='56.0%', easy_questions_solved='3', total_easy_questions='457',
-                                medium_questions_solved='5', total_medium_questions='901', hard_questions_solved='2',
-                                total_hard_questions='365', contribution_points='58', contribution_problems='0',
-                                contribution_testcases='0', reputation='0')
+    # leetcode backward compatibility test. Commenting it out as it will fail in future
+    # leetcode_ud = UserData('saurabhprakash')
+    # leetcode_ans = leetcode_ud.get_details('leetcode')
+    # assert leetcode_ans == dict(status='Success', ranking='~100000', total_problems_solved='10',
+    #                             acceptance_rate='56.0%', easy_questions_solved='3', total_easy_questions='457',
+    #                             medium_questions_solved='5', total_medium_questions='901', hard_questions_solved='2',
+    #                             total_hard_questions='365', contribution_points='58', contribution_problems='0',
+    #                             contribution_testcases='0', reputation='0')
