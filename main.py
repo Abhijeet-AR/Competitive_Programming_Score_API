@@ -23,6 +23,9 @@ class Details(Resource):
 
         except PlatformError:
             return {'status': 'Failed', 'details': 'Invalid Platform'}
+        
+        except BrokenChangesError:
+            return {'status': 'Failed', 'details': 'API broken due to site changes'}
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
