@@ -19,6 +19,8 @@ class UsernameError(Exception):
 class PlatformError(Exception):
     pass
 
+class BrokenChangesError(Exception):
+    pass
 
 class UserData:
     def __init__(self, username=None):
@@ -296,6 +298,47 @@ class UserData:
 
         return details
 
+    def __atcoder(self):
+        url = "https://atcoder.jp/users/{}".format(self.__username)
+
+        page = requests.get(url)
+
+        if page.status_code != 200:
+            raise UsernameError("User not Found")
+
+        soup = BeautifulSoup(page.text, "html.parser")
+        tables = soup.find_all("table", class_="dl-table")
+        if len(tables)<2:
+            details = {
+                "status": "Success",
+                "username": self.__username,
+                "platform": "Atcoder",
+                "rating": "NA",
+                "highest": "NA",
+                "rank": "NA",
+                "level": "NA",
+            }
+            return details
+        rows = tables[1].find_all("td")
+        try:
+            rank = int(rows[0].text[:-2])
+            current_rating = int(rows[1].text)
+            spans = rows[2].find_all("span")
+            highest_rating = int(spans[0].text)
+            level = spans[2].text
+        except Exception as E:
+            raise BrokenChangesError(E)
+        details = {
+            "status": "Success",
+            "username": self.__username,
+            "platform": "Atcoder",
+            "rating": current_rating,
+            "highest": highest_rating,
+            "rank": rank,
+            "level": level,
+        }
+        return details
+
     # DEPRECATED
     def __leetcode(self):
         url = 'https://leetcode.com/{}'.format(self.__username)
@@ -489,6 +532,9 @@ class UserData:
 
         if platform == 'leetcode':
             return self.__leetcode_v2()
+
+        if platform == 'atcoder':
+            return self.__atcoder()
 
         raise PlatformError('Platform not Found')
 

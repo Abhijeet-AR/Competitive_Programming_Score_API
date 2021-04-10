@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
-from details_soup import UserData, UsernameError, PlatformError
+from details_soup import UserData, UsernameError, PlatformError, BrokenChangesError
 from send_mail import Mail
 
 app = Flask(__name__)
@@ -23,6 +23,9 @@ class Details(Resource):
 
         except PlatformError:
             return {'status': 'Failed', 'details': 'Invalid Platform'}
+        
+        except BrokenChangesError:
+            return {'status': 'Failed', 'details': 'API broken due to site changes'}
 
 
 api.add_resource(Details,'/api/<string:platform>/<string:username>')
