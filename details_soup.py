@@ -307,9 +307,20 @@ class UserData:
             raise UsernameError("User not Found")
 
         soup = BeautifulSoup(page.text, "html.parser")
+        tables = soup.find_all("table", class_="dl-table")
+        if len(tables)<2:
+            details = {
+                "status": "Success",
+                "username": self.__username,
+                "platform": "Atcoder",
+                "rating": "NA",
+                "highest": "NA",
+                "rank": "NA",
+                "level": "NA",
+            }
+            return details
+        rows = tables[1].find_all("td")
         try:
-            table = soup.find_all("table", class_="dl-table")[1]
-            rows = table.find_all("td")
             rank = int(rows[0].text[:-2])
             current_rating = int(rows[1].text)
             spans = rows[2].find_all("span")
