@@ -19,8 +19,10 @@ class UsernameError(Exception):
 class PlatformError(Exception):
     pass
 
+
 class BrokenChangesError(Exception):
     pass
+
 
 class UserData:
     def __init__(self, username=None):
@@ -308,7 +310,7 @@ class UserData:
 
         soup = BeautifulSoup(page.text, "html.parser")
         tables = soup.find_all("table", class_="dl-table")
-        if len(tables)<2:
+        if len(tables) < 2:
             details = {
                 "status": "Success",
                 "username": self.__username,
@@ -426,14 +428,33 @@ class UserData:
 
         def __parse_response(response):
             total_submissions_count = 0
+            total_easy_submissions_count = 0
+            total_medium_submissions_count = 0
+            total_hard_submissions_count = 0
+
             ac_submissions_count = 0
-            total_problems_solved = 0
+            ac_easy_submissions_count = 0
+            ac_medium_submissions_count = 0
+            ac_hard_submissions_count = 0
+
             total_easy_questions = 0
             total_medium_questions = 0
             total_hard_questions = 0
+
+            total_problems_solved = 0
             easy_questions_solved = 0
             medium_questions_solved = 0
             hard_questions_solved = 0
+
+            acceptance_rate = 0
+            easy_acceptance_rate = 0
+            medium_acceptance_rate = 0
+            hard_acceptance_rate = 0
+
+            total_problems_submitted = 0
+            easy_problems_submitted = 0
+            medium_problems_submitted = 0
+            hard_problems_submitted = 0
 
             ranking = get_safe_nested_key(['data', 'matchedUser', 'profile', 'ranking'], response)
             if ranking > 100000:
@@ -453,25 +474,42 @@ class UserData:
             ac_submissions = get_safe_nested_key(['data', 'matchedUser', 'submitStats', 'acSubmissionNum'], response)
             for submission in ac_submissions:
                 if submission['difficulty'] == "All":
+                    total_problems_solved = submission['count']
                     ac_submissions_count = submission['submissions']
+                if submission['difficulty'] == "Easy":
+                    easy_questions_solved = submission['count']
+                    ac_easy_submissions_count = submission['submissions']
+                if submission['difficulty'] == "Medium":
+                    medium_questions_solved = submission['count']
+                    ac_medium_submissions_count = submission['submissions']
+                if submission['difficulty'] == "Hard":
+                    hard_questions_solved = submission['count']
+                    ac_hard_submissions_count = submission['submissions']
 
             total_submissions = get_safe_nested_key(['data', 'matchedUser', 'submitStats', 'totalSubmissionNum'],
                                                     response)
             for submission in total_submissions:
                 if submission['difficulty'] == "All":
-                    total_problems_solved = submission['count']
+                    total_problems_submitted = submission['count']
                     total_submissions_count = submission['submissions']
                 if submission['difficulty'] == "Easy":
-                    easy_questions_solved = submission['count']
+                    easy_problems_submitted = submission['count']
+                    total_easy_submissions_count = submission['submissions']
                 if submission['difficulty'] == "Medium":
-                    medium_questions_solved = submission['count']
+                    medium_problems_submitted = submission['count']
+                    total_medium_submissions_count = submission['submissions']
                 if submission['difficulty'] == "Hard":
-                    hard_questions_solved = submission['count']
+                    hard_problems_submitted = submission['count']
+                    total_hard_submissions_count = submission['submissions']
 
             if total_submissions_count > 0:
                 acceptance_rate = round(ac_submissions_count * 100 / total_submissions_count, 2)
-            else:
-                acceptance_rate = 0
+            if total_easy_submissions_count > 0:
+                easy_acceptance_rate = round(ac_easy_submissions_count * 100 / total_easy_submissions_count, 2)
+            if total_medium_submissions_count > 0:
+                medium_acceptance_rate = round(ac_medium_submissions_count * 100 / total_medium_submissions_count, 2)
+            if total_hard_submissions_count > 0:
+                hard_acceptance_rate = round(ac_hard_submissions_count * 100 / total_hard_submissions_count, 2)
 
             contribution_points = get_safe_nested_key(['data', 'matchedUser', 'contributions', 'points'],
                                                       response)
@@ -483,13 +521,20 @@ class UserData:
             return {
                 'status': 'Success',
                 'ranking': str(ranking),
+                'total_problems_submitted': str(total_problems_submitted),
                 'total_problems_solved': str(total_problems_solved),
                 'acceptance_rate': f"{acceptance_rate}%",
+                'easy_problems_submitted': str(easy_problems_submitted),
                 'easy_questions_solved': str(easy_questions_solved),
+                'easy_acceptance_rate': f"{easy_acceptance_rate}%",
                 'total_easy_questions': str(total_easy_questions),
+                'medium_problems_submitted': str(medium_problems_submitted),
                 'medium_questions_solved': str(medium_questions_solved),
+                'medium_acceptance_rate': f"{medium_acceptance_rate}%",
                 'total_medium_questions': str(total_medium_questions),
+                'hard_problems_submitted': str(hard_problems_submitted),
                 'hard_questions_solved': str(hard_questions_solved),
+                'hard_acceptance_rate': f"{hard_acceptance_rate}%",
                 'total_hard_questions': str(total_hard_questions),
                 'contribution_points': str(contribution_points),
                 'contribution_problems': str(contribution_problems),
