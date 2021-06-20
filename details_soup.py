@@ -147,7 +147,7 @@ class UserData:
 
         def user_details_get():
             header_containers = soup.find_all('header')
-            name = header_containers[1].find('h2').text
+            name = header_containers[1].find('h1', class_="h2-style").text
 
             user_details_section = soup.find('section', class_='user-details')
             user_details_list = user_details_section.find_all('li')
