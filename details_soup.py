@@ -146,18 +146,24 @@ class UserData:
             return fully_solved, partially_solved
 
         def user_details_get():
+            user_details_attribute_exclusion_list = {'username', 'link', 'teams list', 'discuss profile'}
+
             header_containers = soup.find_all('header')
             name = header_containers[1].find('h1', class_="h2-style").text
 
             user_details_section = soup.find('section', class_='user-details')
             user_details_list = user_details_section.find_all('li')
 
-            return {'name': name, 'username': user_details_list[0].text.split('★')[-1].rstrip('\n'),
-                    'country': user_details_list[1].text.split(':')[-1].strip(),
-                    'state': user_details_list[2].text.split(':')[-1].strip(),
-                    'city': user_details_list[3].text.split(':')[-1].strip(),
-                    'student/professional': user_details_list[4].text.split(':')[-1].strip(),
-                    'institution': user_details_list[5].text.split(':')[-1].strip()}
+            user_details_response = {'name': name, 'username': user_details_list[0].text.split('★')[-1].rstrip('\n')}
+            for user_details in user_details_list:
+                attribute, value = user_details.text.split(':')[:2]
+                attribute = attribute.strip().lower()
+                value = value.strip()
+
+                if attribute not in user_details_attribute_exclusion_list:
+                    user_details_response[attribute] = value
+
+            return user_details_response
 
         full, partial = problems_solved_get()
         details = {'status': 'Success', 'rating': int(rating), 'stars': stars, 'highest_rating': int(highest_rating),
