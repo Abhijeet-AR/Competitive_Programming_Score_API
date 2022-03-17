@@ -62,8 +62,10 @@ class UserData:
 
         def contests_details_get():
             rating_table = soup.find('table', class_='rating-table')
-
+            if not rating_table:
+                return []
             rating_table_rows = rating_table.find_all('td')
+
 
             '''Can add ranking url to contests'''
 
