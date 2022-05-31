@@ -56,13 +56,14 @@ class UserData:
         global_rank = rating_ranks[0].strong.text
         country_rank = rating_ranks[1].strong.text
 
-        if global_rank != 'NA':
+        if global_rank != 'NA' and global_rank != 'Inactive':
             global_rank = int(global_rank)
             country_rank = int(country_rank)
 
         def contests_details_get():
             rating_table = soup.find('table', class_='rating-table')
-
+            if not rating_table:
+                return []
             rating_table_rows = rating_table.find_all('td')
 
             '''Can add ranking url to contests'''
