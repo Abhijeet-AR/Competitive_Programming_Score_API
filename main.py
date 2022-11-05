@@ -3,7 +3,6 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 
 from details_soup import UserData, UsernameError, PlatformError, BrokenChangesError
-from send_mail import Mail
 
 app = Flask(__name__)
 CORS(app)
