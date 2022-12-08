@@ -1,6 +1,6 @@
 aniso8601==8.0.0
 beautifulsoup4==4.8.2
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
 Flask==1.1.1
